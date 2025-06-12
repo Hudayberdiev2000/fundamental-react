@@ -7,14 +7,15 @@ export type PostItemType = {
 
 interface PostItemProps {
     post: PostItemType;
+    order: number;
 }
 
 const PostItem = (props: PostItemProps) => {
-    const { id, title, body } = props.post;
+    const { post: { title, body }, order } = props;
     return (
         <div className="post">
             <div className="post-content">
-                <strong>{id}. {title}</strong>
+                <strong>{order}. {title}</strong>
                 <div>
                     {body}
                 </div>

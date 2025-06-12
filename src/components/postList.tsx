@@ -10,8 +10,8 @@ const PostList = (props: PostListProps) => {
     return (
         <div>
             <h1 style={{textAlign:"center"}}>{title}</h1>
-            {posts.map(post => (
-                <PostItem key={post.id} post={post} />
+            {posts.map((post, i) => (
+                <PostItem order={i + 1} key={post.id} post={post} />
             ))}
         </div>
     );
