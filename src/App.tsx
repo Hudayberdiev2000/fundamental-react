@@ -1,5 +1,5 @@
 import './styles/app.css'
-import {useState} from "react";
+import {useRef, useState} from "react";
 import PostList from "./components/postList.tsx";
 import MyButton from "./components/UI/button/myButton.tsx";
 import MyInput from "./components/UI/input/myInput.tsx";
@@ -24,7 +24,6 @@ function App() {
         e:  React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) {
         e.preventDefault();
-        console.log(title, body);
     }
 
   return (

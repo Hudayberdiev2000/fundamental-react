@@ -1,4 +1,5 @@
 import cls from './myInput.module.css'
+import {forwardRef} from "react";
 
 
 interface MyInputProps extends React.InputHTMLAttributes<
@@ -7,11 +8,11 @@ interface MyInputProps extends React.InputHTMLAttributes<
     className?: string;
 }
 
-const MyInput = (props: MyInputProps) => {
+const MyInput = forwardRef<HTMLInputElement, MyInputProps>((props, ref) => {
     const { className = "", ...rest } = props;
     return (
-            <input className={`${cls.myInput} ${className}`} {...rest} />
+            <input ref={ref} className={`${cls.myInput} ${className}`} {...rest} />
     );
-};
+});
 
 export default MyInput;
