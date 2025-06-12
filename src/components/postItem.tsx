@@ -1,3 +1,4 @@
+import MyButton from "./UI/button/myButton.tsx";
 
 export type PostItemType = {
     id: number,
@@ -8,20 +9,21 @@ export type PostItemType = {
 interface PostItemProps {
     post: PostItemType;
     order: number;
+    onDelete: (post: PostItemType) => void;
 }
 
 const PostItem = (props: PostItemProps) => {
-    const { post: { title, body }, order } = props;
+    const { post, order, onDelete} = props;
     return (
         <div className="post">
             <div className="post-content">
-                <strong>{order}. {title}</strong>
+                <strong>{order}. {post.title}</strong>
                 <div>
-                    {body}
+                    {post.body}
                 </div>
             </div>
             <div className="post__btns">
-                <button>Delete</button>
+                <MyButton onClick={() => onDelete(post)}>Delete</MyButton>
             </div>
         </div>
     );
