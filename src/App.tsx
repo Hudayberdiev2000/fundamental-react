@@ -6,7 +6,7 @@ import PostForm from "./components/postForm.tsx";
 import PostFilter from "./components/postFilter.tsx";
 import { MyModal } from "./components/UI/modal/myModal.tsx";
 import MyButton from "./components/UI/button/myButton.tsx";
-import { usePosts } from "./hooks/usePosts.tsx";
+import { usePosts } from "./hooks/usePosts.ts";
 import { PostService } from "./API/postService.ts";
 import { useFetch } from "./hooks/useFetch.ts";
 
@@ -31,7 +31,7 @@ function App() {
     isLoading,
     error,
   } = useFetch(async () => {
-    const response = await PostService.getAll();
+    const response = await PostService.getAll(10, 1);
     if (response) setPosts(response);
   });
 

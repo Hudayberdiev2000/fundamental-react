@@ -9,7 +9,11 @@ export function useFetch<T>(callback: () => Promise<T>) {
       setIsLoading(true);
       await callback();
     } catch (e) {
-      setError(e.message);
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError(String(e));
+      }
     } finally {
       setIsLoading(false);
     }
