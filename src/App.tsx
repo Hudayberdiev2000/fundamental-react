@@ -1,84 +1,15 @@
-import "./styles/app.css";
-import { useEffect, useState } from "react";
-import PostList from "./components/postList.tsx";
-import type { PostItemType } from "./components/postItem.tsx";
-import PostForm from "./components/postForm.tsx";
-import PostFilter from "./components/postFilter.tsx";
-import { MyModal } from "./components/UI/modal/myModal.tsx";
-import MyButton from "./components/UI/button/myButton.tsx";
-import { usePosts } from "./hooks/usePosts.ts";
-import { PostService } from "./API/postService.ts";
-import { useFetch } from "./hooks/useFetch.ts";
-import {getPagesArray, getTotalPagesCount} from "./utils/pages.ts";
-import {Pagination} from "./components/UI/pagination/pagination.tsx";
-
-export interface PostFilterType {
-  sort: keyof Omit<PostItemType, "id"> | "";
-  query: string;
-}
+import './styles/app.css'
+import {BrowserRouter} from "react-router-dom";
+import {Navbar} from "./components/UI/navbar/navbar.tsx";
+import AppRouter from "./components/appRouter.tsx";
 
 function App() {
-  const [posts, setPosts] = useState<PostItemType[]>([]);
-  const [filter, setFilter] = useState<PostFilterType>({
-    sort: "",
-    query: "",
-  });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(10);
-  const [page, setPage] = useState<number>(1);
-
-
-  const sortedAndSearchedPosts = usePosts(posts, filter);
-  const {
-    fetching: getPosts,
-    isLoading,
-    error,
-  } = useFetch(async ({limit, page}) => {
-    const response = await PostService.getAll({limit, page});
-    setPosts(response.data);
-    const totalCount: number = response.headers["x-total-count"]
-    setTotalPages(getTotalPagesCount(totalCount, limit));
-  });
-
-  function createPost(post: PostItemType) {
-    setPosts([...posts, post]);
-    setIsModalOpen(false);
-  }
-
-  function deletePost(post: PostItemType) {
-    setPosts(posts.filter((item) => item.id !== post.id));
-  }
-
-  useEffect(() => {
-    getPosts({limit, page});
-  }, []);
-
-  const changePage = (page: number) => {
-      setPage(page);
-      getPosts({limit, page});
-  }
 
   return (
-    <div className="app">
-      <MyButton style={{ marginTop: 30 }} onClick={() => setIsModalOpen(true)}>
-        Create post
-      </MyButton>
-      <MyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <PostForm create={createPost} />
-      </MyModal>
-      <hr style={{ marginTop: 15, marginBottom: 15 }} />
-      <PostFilter filter={filter} setFilter={setFilter} />
-
-      <PostList
-        error={error}
-        isLoading={isLoading}
-        onDelete={deletePost}
-        posts={sortedAndSearchedPosts}
-        title="List of posts"
-      />
-        <Pagination totalPages={totalPages} page={page} onPageChange={changePage}  />
-    </div>
+    <BrowserRouter>
+        <Navbar />
+        <AppRouter />
+    </BrowserRouter>
   );
 }
 
