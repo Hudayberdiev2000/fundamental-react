@@ -21,3 +21,23 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.page__wrapper {
+    display: flex;
+    margin: 20px 0;
+    gap: 8px;
+}
+
+.page, .page__current {
+    cursor: pointer;
+    padding: 10px;
+}
+
+.page {
+    border: 1px solid teal;
+}
+
+.page__current {
+    border: 2px solid orange;
+    font-weight:  bold;
+}

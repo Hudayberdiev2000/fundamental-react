@@ -36,8 +36,8 @@ const PostList = (props: PostListProps) => {
   return (
     <div>
       <h1 style={{ textAlign: "center" }}>{title}</h1>
-      {posts.map((post, i) => (
-        <PostItem onDelete={onDelete} order={i + 1} key={post.id} post={post} />
+      {posts.map((post, ) => (
+        <PostItem onDelete={onDelete} order={post.id} key={post.id} post={post} />
       ))}
     </div>
   );

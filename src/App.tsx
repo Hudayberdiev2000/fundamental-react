@@ -9,6 +9,8 @@ import MyButton from "./components/UI/button/myButton.tsx";
 import { usePosts } from "./hooks/usePosts.ts";
 import { PostService } from "./API/postService.ts";
 import { useFetch } from "./hooks/useFetch.ts";
+import {getPagesArray, getTotalPagesCount} from "./utils/pages.ts";
+import {Pagination} from "./components/UI/pagination/pagination.tsx";
 
 export interface PostFilterType {
   sort: keyof Omit<PostItemType, "id"> | "";
@@ -17,22 +19,26 @@ export interface PostFilterType {
 
 function App() {
   const [posts, setPosts] = useState<PostItemType[]>([]);
-
   const [filter, setFilter] = useState<PostFilterType>({
     sort: "",
     query: "",
   });
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState<number>(1);
+
 
   const sortedAndSearchedPosts = usePosts(posts, filter);
   const {
     fetching: getPosts,
     isLoading,
     error,
-  } = useFetch(async () => {
-    const response = await PostService.getAll(10, 1);
-    if (response) setPosts(response);
+  } = useFetch(async ({limit, page}) => {
+    const response = await PostService.getAll({limit, page});
+    setPosts(response.data);
+    const totalCount: number = response.headers["x-total-count"]
+    setTotalPages(getTotalPagesCount(totalCount, limit));
   });
 
   function createPost(post: PostItemType) {
@@ -45,8 +51,13 @@ function App() {
   }
 
   useEffect(() => {
-    getPosts();
+    getPosts({limit, page});
   }, []);
+
+  const changePage = (page: number) => {
+      setPage(page);
+      getPosts({limit, page});
+  }
 
   return (
     <div className="app">
@@ -66,6 +77,7 @@ function App() {
         posts={sortedAndSearchedPosts}
         title="List of posts"
       />
+        <Pagination totalPages={totalPages} page={page} onPageChange={changePage}  />
     </div>
   );
 }

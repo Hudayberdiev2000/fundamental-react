@@ -1,14 +1,13 @@
 import axios from "axios";
+import type {PaginationType} from "../types/types.ts";
 
 export class PostService {
-  static async getAll(limit: number, page: number) {
-    const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+  static async getAll(args: PaginationType) {
+    return await axios.get('https://jsonplaceholder.typicode.com/posts', {
       params: {
-        _limit: limit,
-        _page: page,
+        _limit: args.limit,
+        _page: args.page,
       }
     });
-
-    return response.data;
   }
 }
