@@ -14,4 +14,8 @@ export class PostService {
   static async getById(id: number) {
     return await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
   }
+
+  static async getCommentsByPostId(postId: number) {
+    return await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`);
+  }
 }
