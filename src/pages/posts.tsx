@@ -10,6 +10,7 @@ import PostForm from "../components/postForm.tsx";
 import PostFilter from "../components/postFilter.tsx";
 import PostList from "../components/postList.tsx";
 import {Pagination} from "../components/UI/pagination/pagination.tsx";
+import type {PaginationType} from "../types/types.ts";
 
 export interface PostFilterType {
     sort: keyof Omit<PostItemType, "id"> | "";
@@ -33,7 +34,7 @@ export function Posts() {
         fetching: getPosts,
         isLoading,
         error,
-    } = useFetch(async ({limit, page}) => {
+    } = useFetch<PaginationType>(async ({limit, page}) => {
         const response = await PostService.getAll({limit, page});
         setPosts(response.data);
         const totalCount: number = response.headers["x-total-count"]

@@ -5,18 +5,21 @@ import {useEffect, useState} from "react";
 import type {PostItemType} from "../components/postItem.tsx";
 import {Loader} from "../components/UI/loader/loader.tsx";
 
+interface PostDetailsPageParams {
+    postId: string;
+}
+
 export const PostDetails = () => {
-    const params = useParams()
+    const params = useParams<keyof PostDetailsPageParams>() as PostDetailsPageParams
+    const id = Number(params.postId)
     const [post, setPost] = useState<PostItemType | null>(null)
-    const {fetching: fetchPost, isLoading} = useFetch( async () => {
-        const response = await PostService.getById(Number(params.postId))
+    const {fetching: fetchPost, isLoading} = useFetch<number>( async (id) => {
+        const response = await PostService.getById(id)
         setPost(response.data)
     })
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        fetchPost(Number(params.id))
+        fetchPost(id)
     }, [])
 
     return (
@@ -25,6 +28,8 @@ export const PostDetails = () => {
                Post Details page. ID: {params.postId}
             </h1>
             {isLoading ? <Loader /> : <div>{post?.id} {post?.title}</div>}
+
+            <h1>Comments</h1>
 
         </div>
     );

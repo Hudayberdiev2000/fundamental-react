@@ -1,11 +1,10 @@
 import { useState } from "react";
-import type {PaginationType} from "../types/types.ts";
 
-export function useFetch<T>(callback: (args: PaginationType) => Promise<T>) {
+export function useFetch<T>(callback: (args: T) => Promise<void>) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetching = async (args: PaginationType) => {
+  const fetching = async (args: T) => {
     try {
       setIsLoading(true);
       await callback(args);
