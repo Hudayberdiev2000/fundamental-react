@@ -12,21 +12,6 @@ interface PostListProps {
 const PostList = (props: PostListProps) => {
   const { posts, title, onDelete, isLoading = false, error } = props;
 
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 50,
-        }}
-      >
-        <Loader />
-      </div>
-    );
-  }
-
   if (error) return <div>An error happened</div>;
 
   if (!posts.length) {
@@ -39,6 +24,7 @@ const PostList = (props: PostListProps) => {
       {posts.map((post, ) => (
         <PostItem onDelete={onDelete} order={post.id} key={post.id} post={post} />
       ))}
+        {isLoading &&  <Loader />}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import type {PostItemType} from "../components/postItem.tsx";
 import {usePosts} from "../hooks/usePosts.ts";
 import {useFetch} from "../hooks/useFetch.ts";
@@ -27,6 +27,10 @@ export function Posts() {
     const [totalPages, setTotalPages] = useState<number>(0);
     const [limit] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
+    const lastElementRef = useRef<HTMLDivElement | null>(null);
+    const observer = useRef<IntersectionObserver | null>(null)
+
+    console.log("hshshshshssh")
 
 
     const sortedAndSearchedPosts = usePosts(posts, filter);
@@ -36,7 +40,7 @@ export function Posts() {
         error,
     } = useFetch<PaginationType>(async ({limit, page}) => {
         const response = await PostService.getAll({limit, page});
-        setPosts(response.data);
+        setPosts([...posts, ...response.data]);
         const totalCount: number = response.headers["x-total-count"]
         setTotalPages(getTotalPagesCount(totalCount, limit));
     });
@@ -51,12 +55,23 @@ export function Posts() {
     }
 
     useEffect(() => {
-        getPosts({limit, page});
+        if(isLoading) return
+        const callback = function (entries: IntersectionObserverEntry[]) {
+            if(entries[0].isIntersecting) {
+                console.log("GORUNDI")
+            }
+        }
+
+        observer.current = new IntersectionObserver(callback);
+        observer.current.observe(lastElementRef.current!)
     }, []);
+
+    useEffect(() => {
+        getPosts({limit, page});
+    }, [page]);
 
     const changePage = (page: number) => {
         setPage(page);
-        getPosts({limit, page});
     }
 
     return (
@@ -77,6 +92,8 @@ export function Posts() {
                 posts={sortedAndSearchedPosts}
                 title="List of posts"
             />
+            <div ref={lastElementRef} style={{background: "red", height: "20px"}} />
+
             <Pagination totalPages={totalPages} page={page} onPageChange={changePage}  />
         </div>
     );
