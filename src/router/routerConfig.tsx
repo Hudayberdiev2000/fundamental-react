@@ -1,4 +1,4 @@
-import type {RouteProps} from "react-router-dom";
+import {Navigate, type RouteProps} from "react-router-dom";
 import {Posts} from "../pages/posts.tsx";
 import {About} from "../pages/about.tsx";
 import {PostDetails} from "../pages/postDetails.tsx";
@@ -39,16 +39,20 @@ export const privateRoutesConfig: Record<
     },
     [AppRoutes.NOT_FOUND]: {
         path: RoutePaths.not_found,
-        element: <NotFound />
+        element: <Navigate to={RoutePaths.posts} />
     }
 }
 
 export const publicRoutesConfig: Record<
-    Extract<AppRoutes, AppRoutes.LOGIN>,
+    Extract<AppRoutes, AppRoutes.LOGIN | AppRoutes.NOT_FOUND>,
     RouteProps
 > = {
     [AppRoutes.LOGIN]: {
         path: RoutePaths.login,
         element: <Login />
+    },
+    [AppRoutes.NOT_FOUND]: {
+        path: RoutePaths.not_found,
+        element: <Navigate to={RoutePaths.login} />
     }
 }
