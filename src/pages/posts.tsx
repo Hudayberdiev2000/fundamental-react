@@ -30,9 +30,6 @@ export function Posts() {
     const lastElementRef = useRef<HTMLDivElement | null>(null);
     const observer = useRef<IntersectionObserver | null>(null)
 
-    console.log("hshshshshssh")
-
-
     const sortedAndSearchedPosts = usePosts(posts, filter);
     const {
         fetching: getPosts,
@@ -55,20 +52,22 @@ export function Posts() {
     }
 
     useEffect(() => {
-        if(isLoading) return
+        if (isLoading || !lastElementRef.current) return;
+        if(observer.current) observer.current.disconnect()
         const callback = function (entries: IntersectionObserverEntry[]) {
-            if(entries[0].isIntersecting) {
-                console.log("GORUNDI")
+            console.log(page, totalPages)
+            if(entries[0].isIntersecting && page < totalPages) {
+                setPage(page + 1);
             }
         }
 
         observer.current = new IntersectionObserver(callback);
         observer.current.observe(lastElementRef.current!)
-    }, []);
+    }, [isLoading, page, totalPages]);
 
     useEffect(() => {
         getPosts({limit, page});
-    }, [page]);
+    }, [page, limit]);
 
     const changePage = (page: number) => {
         setPage(page);
@@ -93,7 +92,6 @@ export function Posts() {
                 title="List of posts"
             />
             <div ref={lastElementRef} style={{background: "red", height: "20px"}} />
-
             <Pagination totalPages={totalPages} page={page} onPageChange={changePage}  />
         </div>
     );

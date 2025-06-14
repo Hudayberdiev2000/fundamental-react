@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { PostItemType } from "../components/postItem";
-import type { PostFilterType } from "../App";
+import type {PostFilterType} from "../pages/posts.tsx";
 
 export const useSortedPosts = (
   posts: PostItemType[],
