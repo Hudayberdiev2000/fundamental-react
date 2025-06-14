@@ -1,22 +1,22 @@
-import { useEffect, useRef } from "react";
+import {type RefObject, useEffect, useRef} from "react";
 
-interface UseInfiniteScrollProps {
+interface UseInfiniteScrollProps<T extends Element> {
     isLoading: boolean;
     hasMore: boolean;
     onIntersect: () => void;
-    ref?: React.RefObject<Element>;
+    ref: RefObject<T>;
 }
 
-export function useInfiniteScroll({
-                                      isLoading,
-                                      hasMore,
-                                      onIntersect,
-                                      ref,
-                                  }: UseInfiniteScrollProps) {
+export function useInfiniteScroll<T extends Element>({
+         isLoading,
+         hasMore,
+         onIntersect,
+         ref,
+     }: UseInfiniteScrollProps<T>) {
     const observer = useRef<IntersectionObserver | null>(null);
 
     useEffect(() => {
-        if (isLoading || !ref?.current) return;
+        if (isLoading || !ref.current) return;
 
         if (observer.current) {
             observer.current.disconnect();

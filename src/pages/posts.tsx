@@ -51,11 +51,11 @@ export function Posts() {
         setPosts(posts.filter((item) => item.id !== post.id));
     }
 
-    useInfiniteScroll({
+    useInfiniteScroll<HTMLDivElement>({
         isLoading,
         hasMore: page < totalPages,
         onIntersect: () => setPage(prev => prev + 1),
-        ref: lastElementRef
+        ref: lastElementRef,
     });
 
 
