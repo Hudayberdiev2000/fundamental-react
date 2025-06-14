@@ -11,6 +11,7 @@ import PostFilter from "../components/postFilter.tsx";
 import PostList from "../components/postList.tsx";
 import {Pagination} from "../components/UI/pagination/pagination.tsx";
 import type {PaginationType} from "../types/types.ts";
+import {useInfiniteScroll} from "../hooks/useObserver.ts";
 
 export interface PostFilterType {
     sort: keyof Omit<PostItemType, "id"> | "";
@@ -28,7 +29,6 @@ export function Posts() {
     const [limit] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
     const lastElementRef = useRef<HTMLDivElement | null>(null);
-    const observer = useRef<IntersectionObserver | null>(null)
 
     const sortedAndSearchedPosts = usePosts(posts, filter);
     const {
@@ -51,19 +51,13 @@ export function Posts() {
         setPosts(posts.filter((item) => item.id !== post.id));
     }
 
-    useEffect(() => {
-        if (isLoading || !lastElementRef.current) return;
-        if(observer.current) observer.current.disconnect()
-        const callback = function (entries: IntersectionObserverEntry[]) {
-            console.log(page, totalPages)
-            if(entries[0].isIntersecting && page < totalPages) {
-                setPage(page + 1);
-            }
-        }
+    useInfiniteScroll({
+        isLoading,
+        hasMore: page < totalPages,
+        onIntersect: () => setPage(prev => prev + 1),
+        ref: lastElementRef
+    });
 
-        observer.current = new IntersectionObserver(callback);
-        observer.current.observe(lastElementRef.current!)
-    }, [isLoading, page, totalPages]);
 
     useEffect(() => {
         getPosts({limit, page});

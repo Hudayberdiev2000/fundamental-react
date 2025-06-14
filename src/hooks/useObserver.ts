@@ -1,28 +1,37 @@
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 
-// interface UseObserverProps {
-//     ref: React.RefObject<HTMLDivElement>;
-//     canLoad:
-// }
+interface UseInfiniteScrollProps {
+    isLoading: boolean;
+    hasMore: boolean;
+    onIntersect: () => void;
+    ref?: React.RefObject<Element>;
+}
 
-export const useObserver = (
-    ref: React.RefObject<HTMLDivElement>,
-    canLoad: boolean,
-    isLoading: boolean,
-    callback: React.Dispatch<React.SetStateAction<number>>
-) => {
-    const observer = useRef<IntersectionObserver | null>(null)
+export function useInfiniteScroll({
+                                      isLoading,
+                                      hasMore,
+                                      onIntersect,
+                                      ref,
+                                  }: UseInfiniteScrollProps) {
+    const observer = useRef<IntersectionObserver | null>(null);
 
-    // useEffect(() => {
-    //     if (isLoading || !lastElementRef.current) return;
-    //     if(observer.current) observer.current.disconnect()
-    //     const cb = function (entries: IntersectionObserverEntry[]) {
-    //         if(entries[0].isIntersecting && canLoad) {
-    //             callback(5)
-    //         }
-    //     }
-    //
-    //     observer.current = new IntersectionObserver(callback);
-    //     observer.current.observe(ref.current!)
-    // }, [isLoading]);
+    useEffect(() => {
+        if (isLoading || !ref?.current) return;
+
+        if (observer.current) {
+            observer.current.disconnect();
+        }
+
+        observer.current = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting && hasMore) {
+                onIntersect();
+            }
+        });
+
+        observer.current.observe(ref.current);
+
+        return () => {
+            observer.current?.disconnect();
+        };
+    }, [isLoading, hasMore, onIntersect, ref]);
 }
