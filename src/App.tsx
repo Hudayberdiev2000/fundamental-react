@@ -2,14 +2,16 @@ import './styles/app.css'
 import {BrowserRouter} from "react-router-dom";
 import {Navbar} from "./components/UI/navbar/navbar.tsx";
 import AppRouter from "./components/appRouter.tsx";
+import { AuthProvider} from "./context";
 
 function App() {
-
   return (
-    <BrowserRouter>
-        <Navbar />
-        <AppRouter />
-    </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <Navbar />
+                <AppRouter />
+            </BrowserRouter>
+        </AuthProvider>
   );
 }
 

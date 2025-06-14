@@ -1,7 +1,10 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 import {AppRoutes, privateRoutesConfig, publicRoutesConfig, RoutePaths} from "../router/routerConfig.tsx";
+import {useAuth} from "../context";
 
 const AppRouter = () => {
+    const { isAuth} = useAuth()
+    console.log(isAuth)
     return (
         <Routes>
             <Route index element={<Navigate to={RoutePaths[AppRoutes.POSTS]} replace />} />
