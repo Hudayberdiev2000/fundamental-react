@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import type {PostItemType} from "../components/postItem.tsx";
 import {usePosts} from "../hooks/usePosts.ts";
 import {useFetch} from "../hooks/useFetch.ts";
@@ -52,10 +52,14 @@ export function Posts() {
         setPosts(posts.filter((item) => item.id !== post.id));
     }
 
+    const handleIntersect = useCallback(() => {
+        setPage(prev => prev + 1);
+    }, [])
+
     useInfiniteScroll<HTMLDivElement>({
         isLoading,
         hasMore: page < totalPages,
-        onIntersect: () => setPage(prev => prev + 1),
+        onIntersect: handleIntersect,
         ref: lastElementRef,
     });
 
