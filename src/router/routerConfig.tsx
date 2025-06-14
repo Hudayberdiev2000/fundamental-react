@@ -2,7 +2,6 @@ import {Navigate, type RouteProps} from "react-router-dom";
 import {Posts} from "../pages/posts.tsx";
 import {About} from "../pages/about.tsx";
 import {PostDetails} from "../pages/postDetails.tsx";
-import {NotFound} from "../pages/notFound.tsx";
 import Login from "../pages/login.tsx";
 
 export enum AppRoutes {

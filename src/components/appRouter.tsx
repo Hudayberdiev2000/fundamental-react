@@ -1,9 +1,25 @@
 import { Route, Routes} from "react-router-dom";
 import { privateRoutesConfig, publicRoutesConfig} from "../router/routerConfig.tsx";
 import {useAuth} from "../context";
+import {useEffect} from "react";
+import {Loader} from "./UI/loader/loader.tsx";
 
 const AppRouter = () => {
-    const { isAuth} = useAuth()
+    const {
+        isAuth,
+        setIsAuth,
+        setIsLoading,
+        isLoading
+    } = useAuth()
+
+    useEffect(() => {
+        const token = localStorage.getItem("auth");
+        if(token) setIsAuth?.(true)
+        setIsLoading?.(false);
+    }, [setIsLoading, setIsAuth]);
+
+    if(isLoading) return <Loader />
+
     return (
         <Routes>
             {isAuth ? (

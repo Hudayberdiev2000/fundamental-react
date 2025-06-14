@@ -1,11 +1,11 @@
 import MyInput from "../components/UI/input/myInput.tsx";
 import MyButton from "../components/UI/button/myButton.tsx";
 import {useAuth} from "../context";
-import {Navigate, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {RoutePaths} from "../router/routerConfig.tsx";
 
 const Login = () => {
-    const  { isAuth, setIsAuth } = useAuth()
+    const  { setIsAuth } = useAuth()
     const navigate = useNavigate()
 
     const login = (e: React.FormEvent<HTMLFormElement>) => {
@@ -13,12 +13,9 @@ const Login = () => {
         if (setIsAuth) {
             setIsAuth(true)
             navigate(RoutePaths.posts)
+            localStorage.setItem("auth", "true")
         }
     }
-
-    console.log(isAuth)
-
-    if (isAuth) return <Navigate to={RoutePaths.posts} />
 
     return (
         <div>
