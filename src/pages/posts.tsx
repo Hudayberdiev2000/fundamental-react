@@ -12,6 +12,7 @@ import PostList from "../components/postList.tsx";
 import {Pagination} from "../components/UI/pagination/pagination.tsx";
 import type {PaginationType} from "../types/types.ts";
 import {useInfiniteScroll} from "../hooks/useObserver.ts";
+import MySelect from "../components/UI/select/mySelect.tsx";
 
 export interface PostFilterType {
     sort: keyof Omit<PostItemType, "id"> | "";
@@ -26,7 +27,7 @@ export function Posts() {
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const [limit] = useState<number>(10);
+    const [limit, setLimit] = useState<number>(10);
     const [page, setPage] = useState<number>(1);
     const lastElementRef = useRef<HTMLDivElement | null>(null);
 
@@ -77,6 +78,29 @@ export function Posts() {
             </MyModal>
             <hr style={{ marginTop: 15, marginBottom: 15 }} />
             <PostFilter filter={filter} setFilter={setFilter} />
+            <MySelect
+                value={limit.toString()}
+                options={[
+                    {
+                        value: "5",
+                        label: "5"
+                    },
+                    {
+                        value: "10",
+                        label: "10"
+                    },
+                    {
+                        value: "15",
+                        label: "15"
+                    },
+                    {
+                        value:"20",
+                        label: "20"
+                    }
+                ]}
+                defaultValue={limit.toString()}
+                onChange={value => setLimit(+value)}
+            />
 
             <PostList
                 error={error}
