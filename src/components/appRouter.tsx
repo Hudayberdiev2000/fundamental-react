@@ -1,12 +1,18 @@
-import {Route, Routes} from "react-router-dom";
-import {routeConfig} from "../router/routerConfig.tsx";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {AppRoutes, privateRoutesConfig, publicRoutesConfig, RoutePaths} from "../router/routerConfig.tsx";
 
 const AppRouter = () => {
     return (
         <Routes>
-            {Object.values(routeConfig).map(item => {
+            <Route index element={<Navigate to={RoutePaths[AppRoutes.POSTS]} replace />} />
+                {Object.values(privateRoutesConfig).map(item => {
+                    return (
+                        <Route key={item.path} path={item.path} element={item.element}/>
+                    )
+                })}
+            {Object.values(publicRoutesConfig).map(item => {
                 return (
-                    <Route key={item.path} path={item.path} element={item.element} />
+                    <Route key={item.path} path={item.path} element={item.element}/>
                 )
             })}
         </Routes>
